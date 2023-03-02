@@ -2,22 +2,27 @@ package com.iamdalibor.Tasky.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.time.LocalDateTime;
+//import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
+@Getter
+@Setter
 @Data
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"email"})
+})
+//@Table(name = "users")
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,11 +40,12 @@ public class User implements UserDetails{
 //    @JoinColumn(name = "user_id")
     private List<Board> boardsList;
 
-    public User(String email, String fName, String lName, String avatar, LocalDateTime regDate, List<Group> groupsList, List<Board> boardsList) {
+    public User(String email, String password, String fName, String lName) {
         this.email = email;
+        this.password = password;
         this.fName = fName;
         this.lName = lName;
-        this.avatar = avatar;
+        this.avatar = new String("default.jpg");
         this.regDate = LocalDateTime.now();
         this.groupsList = new ArrayList<>();
         this.boardsList = new ArrayList<>();
