@@ -9,9 +9,10 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Entity
+@Table(name = "group")
 public class Group {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

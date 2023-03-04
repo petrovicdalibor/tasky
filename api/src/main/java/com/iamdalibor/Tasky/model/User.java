@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -22,7 +23,6 @@ import java.util.List;
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"email"})
 })
-//@Table(name = "users")
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,12 +33,19 @@ public class User implements UserDetails{
     private String lName;
     private String avatar;
     private LocalDateTime regDate;
-    @ManyToMany(fetch = FetchType.EAGER)
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+                joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+                inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+    private Set<Role> roles;
+
+//    @ManyToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "user_id")
-    private List<Group> groupsList;
-    @ManyToMany(fetch = FetchType.EAGER)
+//    private List<Group> groupsList;
+//    @ManyToMany(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "user_id")
-    private List<Board> boardsList;
+//    private List<Board> boardsList;
 
     public User(String email, String password, String fName, String lName) {
         this.email = email;
@@ -47,8 +54,8 @@ public class User implements UserDetails{
         this.lName = lName;
         this.avatar = new String("default.jpg");
         this.regDate = LocalDateTime.now();
-        this.groupsList = new ArrayList<>();
-        this.boardsList = new ArrayList<>();
+//        this.groupsList = new ArrayList<>();
+//        this.boardsList = new ArrayList<>();
     }
 
     @Override
